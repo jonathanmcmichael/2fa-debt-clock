@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>2FA Time Debt Clock — The Cost of MFA Friction</title>
+    <meta name="description" content="Calculate and visualize the hidden cost and time wasted on 2FA/MFA logins company-wide in real-time.">
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;600;800&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <!-- Main Stylesheet -->
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="glass-bg"></div>
+    <div class="grid-overlay"></div>
+    
+    <header class="app-header">
+        <div class="logo">
+            <span class="pulse-dot red"></span>
+            <h1>2FA <span class="gradient-text">Time Debt Clock</span></h1>
+        </div>
+        <div class="subtitle-badge">
+            <span>MFA FRICTION ANALYSIS ENGINE</span>
+        </div>
+    </header>
+
+    <main class="app-container">
+        <!-- Main Ticker Display -->
+        <section class="ticker-section glass-card" id="ticker-card">
+            <div class="card-glow"></div>
+            <div class="ticker-header">
+                <h2>CUMULATIVE COMPANY WASTE (SINCE JAN 1)</h2>
+                <span class="live-indicator"><span class="pulse-dot green"></span>LIVE TICKING</span>
+            </div>
+            
+            <div class="ticker-main">
+                <div class="debt-counter" id="cost-counter">$0.00</div>
+                <div class="ticker-label">FAIR MARKET VALUE OF WASTED SALARY HOURS</div>
+            </div>
+
+            <div class="ticker-stats-grid">
+                <div class="stat-box">
+                    <div class="stat-value" id="time-counter">0d 0h 0m 0s 000ms</div>
+                    <div class="stat-label">Total Productive Time Lost</div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-value" id="coffee-counter">0 cups</div>
+                    <div class="stat-label">Equivalent Coffee Brew Time</div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-value" id="productivity-counter">0%</div>
+                    <div class="stat-label">MFA Overhead per Employee</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Main Layout Split -->
+        <div class="two-column-layout">
+            <!-- Left Column: Controls & Stopwatch -->
+            <div class="left-column">
+                <!-- Parameters Panel -->
+                <section class="glass-card controls-card">
+                    <h3>Simulation Parameters</h3>
+                    <p class="section-desc">Adjust these to match your company's scale and salaries.</p>
+                    
+                    <div class="tab-container">
+                        <button type="button" class="tab-btn active" id="tab-simple">Simple Avg</button>
+                        <button type="button" class="tab-btn" id="tab-roles">Role Breakdown</button>
+                    </div>
+
+                    <div id="simple-inputs">
+                        <div class="input-group">
+                            <div class="input-header">
+                                <label for="company-size">Company Size</label>
+                                <span class="value-display" id="company-size-val">500 employees</span>
+                            </div>
+                            <input type="range" id="company-size" min="1" max="10000" step="1" value="500">
+                        </div>
+
+                        <div class="input-group">
+                            <div class="input-header">
+                                <label for="hourly-wage">Average Salary Rate (Fully Loaded)</label>
+                                <span class="value-display" id="hourly-wage-val">$45 / hr</span>
+                            </div>
+                            <input type="range" id="hourly-wage" min="15" max="250" step="5" value="45">
+                        </div>
+                    </div>
+
+                    <div id="roles-inputs" class="hidden">
+                        <div class="roles-list" id="roles-list">
+                            <!-- Dynamic roles will be injected here -->
+                        </div>
+                        <button type="button" class="btn secondary-btn btn-sm" id="btn-add-role" style="width: 100%; margin-top: 1rem;">+ Add Custom Role</button>
+                    </div>
+
+                    <div class="input-group">
+                        <div class="input-header">
+                            <label for="logins-per-day">2FA Logins per Day (per employee)</label>
+                            <span class="value-display" id="logins-per-day-val">4 logins</span>
+                        </div>
+                        <input type="range" id="logins-per-day" min="1" max="20" step="1" value="4">
+                    </div>
+
+                    <div class="input-group">
+                        <div class="input-header">
+                            <label for="avg-mfa-time">Average 2FA Duration</label>
+                            <span class="value-display" id="avg-mfa-time-val">25 seconds</span>
+                        </div>
+                        <input type="range" id="avg-mfa-time" min="5" max="120" step="1" value="25">
+                    </div>
+                </section>
+
+                <!-- Stopwatch Log Your 2FA -->
+                <section class="glass-card stopwatch-card">
+                    <h3>2FA Stopwatch & Logger</h3>
+                    <p class="section-desc">Test your real MFA speed and log it to update the parameters.</p>
+                    
+                    <div class="stopwatch-container">
+                        <div class="stopwatch-display" id="stopwatch-time">00:00.00</div>
+                        <div class="stopwatch-controls">
+                            <button id="btn-start" class="btn primary-btn">Start Login</button>
+                            <button id="btn-stop" class="btn danger-btn" disabled>Verify Code</button>
+                            <button id="btn-reset" class="btn secondary-btn" disabled>Reset</button>
+                        </div>
+                    </div>
+
+                    <div id="method-selector-section" class="method-selector hidden">
+                        <h4>Select 2FA Method to Log:</h4>
+                        <div class="method-grid">
+                            <button class="method-btn" data-method="push">
+                                <span class="method-icon">📱</span>
+                                <span class="method-name">App Push</span>
+                            </button>
+                            <button class="method-btn" data-method="sms">
+                                <span class="method-icon">💬</span>
+                                <span class="method-name">SMS OTP</span>
+                            </button>
+                            <button class="method-btn" data-method="email">
+                                <span class="method-icon">✉️</span>
+                                <span class="method-name">Email OTP</span>
+                            </button>
+                            <button class="method-btn" data-method="hardware">
+                                <span class="method-icon">🔑</span>
+                                <span class="method-name">FIDO2 Key</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Personal Stats -->
+                    <div class="personal-stats-box hidden" id="personal-stats">
+                        <div class="personal-stat-row">
+                            <span>Your Average Time:</span>
+                            <strong id="user-avg-time">0.0s</strong>
+                        </div>
+                        <div class="personal-stat-row">
+                            <span>Logged Sessions:</span>
+                            <strong id="user-total-sessions">0</strong>
+                        </div>
+                        <button class="btn secondary-btn btn-sm" id="btn-apply-user-avg">Apply My Avg to Simulator</button>
+                    </div>
+                </section>
+            </div>
+
+            <!-- Right Column: Graphs & Analysis -->
+            <div class="right-column">
+                <!-- Visual Stats Card -->
+                <section class="glass-card chart-card">
+                    <h3>The Annual Toll</h3>
+                    <p class="section-desc">Extrapolated impact based on your parameters.</p>
+                    
+                    <div class="impact-metrics-grid">
+                        <div class="metric-card">
+                            <div class="metric-icon">💰</div>
+                            <div class="metric-content">
+                                <div class="metric-title">Annual Company Loss</div>
+                                <div class="metric-value" id="annual-cost">$0</div>
+                            </div>
+                        </div>
+
+                        <div class="metric-card">
+                            <div class="metric-icon">⏳</div>
+                            <div class="metric-content">
+                                <div class="metric-title">Annual Time Lost</div>
+                                <div class="metric-value" id="annual-hours">0 hrs</div>
+                            </div>
+                        </div>
+
+                        <div class="metric-card">
+                            <div class="metric-icon">👥</div>
+                            <div class="metric-content">
+                                <div class="metric-title">Equivalent Full-Time Workers</div>
+                                <div class="metric-value" id="annual-fte">0.0 FTEs</div>
+                            </div>
+                        </div>
+
+                        <div class="metric-card">
+                            <div class="metric-icon">📉</div>
+                            <div class="metric-content">
+                                <div class="metric-title">Average Annual Wasted Cost / Employee</div>
+                                <div class="metric-value" id="annual-per-employee">$0 / yr</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- SVG Chart / Visual Breakdown -->
+                    <div class="chart-container">
+                        <h4>Time Lost Comparison</h4>
+                        <div class="chart-wrapper">
+                            <svg id="bar-chart" viewBox="0 0 500 200" width="100%" height="100%">
+                                <!-- Dynamic bars injected via JS -->
+                            </svg>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Shareable summary card -->
+                <section class="glass-card share-card">
+                    <h3>Generate Management Report</h3>
+                    <p class="section-desc font-sm">Copy a professional, concise summary to share with leaders or IT.</p>
+                    
+                    <div class="report-box" id="report-text">
+                        Loading report data...
+                    </div>
+                    <div class="share-actions">
+                        <button class="btn accent-btn" id="btn-copy-report">Copy to Clipboard</button>
+                        <span class="copy-success hidden" id="copy-toast">Copied!</span>
+                    </div>
+                </section>
+            </div>
+        </div>
+    </main>
+
+    <footer class="app-footer">
+        <p>Built with ❤️ for productivity. Visuals keep gameplay honest, but calculators reveal the math.</p>
+    </footer>
+
+    <!-- Application Script -->
+    <script src="app.js"></script>
+</body>
+</html>
