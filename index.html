@@ -31,23 +31,27 @@
         <section class="ticker-section glass-card" id="ticker-card">
             <div class="card-glow"></div>
             <div class="ticker-header">
-                <h2>CUMULATIVE COMPANY WASTE (SINCE JAN 1)</h2>
+                <h2>TIME LOST TO MFA FRICTION (SINCE JAN 1)</h2>
                 <span class="live-indicator"><span class="pulse-dot green"></span>LIVE TICKING</span>
             </div>
             
             <div class="ticker-main">
-                <div class="debt-counter" id="cost-counter">$0.00</div>
-                <div class="ticker-label">FAIR MARKET VALUE OF WASTED SALARY HOURS</div>
+                <div class="debt-counter" id="time-counter">0d 0h 0m 0s 000ms</div>
+                <div class="ticker-label">COMBINED HUMAN TIME LOST TO MFA FRICTION (SINCE JAN 1)</div>
             </div>
 
             <div class="ticker-stats-grid">
                 <div class="stat-box">
-                    <div class="stat-value" id="time-counter">0d 0h 0m 0s 000ms</div>
-                    <div class="stat-label">Total Productive Time Lost</div>
+                    <div class="stat-value" id="cost-counter">$0.00</div>
+                    <div class="stat-label">Salary Value of Wasted Time</div>
                 </div>
                 <div class="stat-box">
-                    <div class="stat-value" id="coffee-counter">0 cups</div>
-                    <div class="stat-label">Equivalent Coffee Brew Time</div>
+                    <div class="stat-value" id="human-life-counter">0 years</div>
+                    <div class="stat-label">Combined Human Life Spent Waiting for a 6-Digit Code</div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-value" id="per-person-counter">0 hrs</div>
+                    <div class="stat-label">Time Each Employee Will Never Get Back (This Year)</div>
                 </div>
                 <div class="stat-box">
                     <div class="stat-value" id="productivity-counter">0%</div>
@@ -57,17 +61,17 @@
         </section>
 
         <!-- Main Layout Split -->
-        <div class="two-column-layout">
-            <!-- Left Column: Controls & Stopwatch -->
-            <div class="left-column">
+        <div class="three-column-layout">
+            <!-- Left Column: Controls -->
+            <div class="dashboard-col col-left">
                 <!-- Parameters Panel -->
                 <section class="glass-card controls-card">
                     <h3>Simulation Parameters</h3>
                     <p class="section-desc">Adjust these to match your company's scale and salaries.</p>
                     
                     <div class="tab-container">
-                        <button type="button" class="tab-btn active" id="tab-simple">Simple Avg</button>
-                        <button type="button" class="tab-btn" id="tab-roles">Role Breakdown</button>
+                        <button type="button" class="tab-btn active" id="tab-simple" role="tab" aria-selected="true">Simple Avg</button>
+                        <button type="button" class="tab-btn" id="tab-roles" role="tab" aria-selected="false">Role Breakdown</button>
                     </div>
 
                     <div id="simple-inputs">
@@ -92,7 +96,7 @@
                         <div class="roles-list" id="roles-list">
                             <!-- Dynamic roles will be injected here -->
                         </div>
-                        <button type="button" class="btn secondary-btn btn-sm" id="btn-add-role" style="width: 100%; margin-top: 1rem;">+ Add Custom Role</button>
+                        <button type="button" class="btn secondary-btn btn-sm btn-add-role" id="btn-add-role">+ Add Custom Role</button>
                     </div>
 
                     <div class="input-group">
@@ -111,7 +115,10 @@
                         <input type="range" id="avg-mfa-time" min="5" max="120" step="1" value="25">
                     </div>
                 </section>
+            </div>
 
+            <!-- Middle Column: Friction Reality -->
+            <div class="dashboard-col col-middle">
                 <!-- Stopwatch Log Your 2FA -->
                 <section class="glass-card stopwatch-card">
                     <h3>2FA Stopwatch & Logger</h3>
@@ -161,10 +168,30 @@
                         <button class="btn secondary-btn btn-sm" id="btn-apply-user-avg">Apply My Avg to Simulator</button>
                     </div>
                 </section>
+
+                <!-- Login Journey Builder -->
+                <section class="glass-card journey-card">
+                    <h3>Typical Login Journey Breakdown</h3>
+                    <p class="section-desc">Map out the exact steps your employees take to log in to calculate the true delay.</p>
+                    
+                    <div class="journey-timeline" id="journey-timeline">
+                        <!-- Steps injected by JS -->
+                    </div>
+                    
+                    <div class="journey-summary">
+                        <span>Total Estimated Delay:</span>
+                        <strong id="journey-total-time" class="accent-text">0.0s</strong>
+                    </div>
+                    
+                    <div class="journey-actions">
+                        <button type="button" class="btn secondary-btn btn-sm" id="btn-add-journey-step">+ Add Step</button>
+                        <button type="button" class="btn primary-btn btn-sm" id="btn-apply-journey">Apply to Simulator</button>
+                    </div>
+                </section>
             </div>
 
-            <!-- Right Column: Graphs & Analysis -->
-            <div class="right-column">
+            <!-- Right Column: Outputs -->
+            <div class="dashboard-col col-right">
                 <!-- Visual Stats Card -->
                 <section class="glass-card chart-card">
                     <h3>The Annual Toll</h3>
@@ -190,7 +217,7 @@
                         <div class="metric-card">
                             <div class="metric-icon">👥</div>
                             <div class="metric-content">
-                                <div class="metric-title">Equivalent Full-Time Workers</div>
+                                <div class="metric-title">Distributed Capacity Drain (FTE Equiv.)</div>
                                 <div class="metric-value" id="annual-fte">0.0 FTEs</div>
                             </div>
                         </div>
@@ -215,6 +242,64 @@
                     </div>
                 </section>
 
+                <!-- Upgrade to Passkeys Panel -->
+                <section class="glass-card upgrade-card">
+                    <div class="card-glow"></div>
+                    <h3>MFA Method Benchmarks</h3>
+                    <p class="section-desc">Apply typical industry time delays, and see the savings from upgrading to FIDO2 Passkeys.</p>
+                    
+                    <div class="benchmark-table">
+                        <div class="benchmark-row header">
+                            <span>MFA Type</span>
+                            <span>Industry Avg</span>
+                            <span>Action</span>
+                        </div>
+                        <div class="benchmark-row" data-time="45">
+                            <span>✉️ SMS / Email OTP</span>
+                            <strong>45s</strong>
+                            <button type="button" class="btn secondary-btn btn-sm btn-apply-benchmark">Apply</button>
+                        </div>
+                        <div class="benchmark-row" data-time="22">
+                            <span>🔢 Auth Number Match</span>
+                            <strong>22s</strong>
+                            <button type="button" class="btn secondary-btn btn-sm btn-apply-benchmark">Apply</button>
+                        </div>
+                        <div class="benchmark-row" data-time="18">
+                            <span>📱 Standard App Push</span>
+                            <strong>18s</strong>
+                            <button type="button" class="btn secondary-btn btn-sm btn-apply-benchmark">Apply</button>
+                        </div>
+                        <div class="benchmark-row highlighted" data-time="7">
+                            <span>🔑 FIDO2 Security Key</span>
+                            <strong class="green-text">7s</strong>
+                            <button type="button" class="btn secondary-btn btn-sm btn-apply-benchmark">Apply</button>
+                        </div>
+                        <div class="benchmark-row highlighted" data-time="3">
+                            <span>😊 Windows Hello / Face</span>
+                            <strong class="green-text">3s</strong>
+                            <button type="button" class="btn secondary-btn btn-sm btn-apply-benchmark">Apply</button>
+                        </div>
+                    </div>
+
+                    <div class="upgrade-savings-box">
+                        <div class="savings-header">ANNUAL SAVINGS BY UPGRADING TO PASSKEYS (4s)</div>
+                        <div class="savings-grid">
+                            <div class="savings-item">
+                                <div class="savings-val" id="passkey-cost-savings">$0</div>
+                                <div class="savings-lbl">Cost Recovered</div>
+                            </div>
+                            <div class="savings-item">
+                                <div class="savings-val" id="passkey-time-savings">0 hrs</div>
+                                <div class="savings-lbl">Labor Time Saved</div>
+                            </div>
+                        </div>
+                        <div class="savings-bar-container">
+                            <div class="savings-bar" id="passkey-savings-bar" style="width: 0%;"></div>
+                            <span class="savings-pct" id="passkey-savings-pct">0% faster</span>
+                        </div>
+                    </div>
+                </section>
+
                 <!-- Shareable summary card -->
                 <section class="glass-card share-card">
                     <h3>Generate Management Report</h3>
@@ -224,7 +309,8 @@
                         Loading report data...
                     </div>
                     <div class="share-actions">
-                        <button class="btn accent-btn" id="btn-copy-report">Copy to Clipboard</button>
+                        <button type="button" class="btn accent-btn" id="btn-copy-report">Copy Report</button>
+                        <button type="button" class="btn secondary-btn" id="btn-copy-link">Copy Share Link</button>
                         <span class="copy-success hidden" id="copy-toast">Copied!</span>
                     </div>
                 </section>
@@ -234,6 +320,7 @@
 
     <footer class="app-footer">
         <p>Built with ❤️ for productivity. Visuals keep gameplay honest, but calculators reveal the math.</p>
+        <p class="disclaimer">Assumes all MFA time displaces productive work at full loaded cost. FTE equivalency represents aggregate distributed capacity drain, not a single reducible headcount. Actual impact varies by role, session trust policies, and device sharing practices.</p>
     </footer>
 
     <!-- Application Script -->
